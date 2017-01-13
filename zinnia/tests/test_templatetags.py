@@ -5,6 +5,7 @@ from django.contrib.sites.models import Site
 from django.core.paginator import Paginator
 from django.core.urlresolvers import reverse
 from django.db.models.signals import post_save
+from django.conf import settings
 from django.template import Context
 from django.template import Template
 from django.template import TemplateDoesNotExist
@@ -157,6 +158,27 @@ class TemplateTagsTestCase(TestCase):
         with self.assertNumQueries(0):
             context = get_recent_entries(3, 'custom_template.html')
         self.assertEqual(len(context['entries']), 1)
+        self.assertEqual(context['template'], 'custom_template.html')
+        with self.assertNumQueries(0):
+            context = get_recent_entries(0)
+        self.assertEqual(len(context['entries']), 0)
+
+    def test_get_recent_entries_with_default_number_of_entries(self):
+        params = {'title': 'My entry',
+                  'content': 'My content',
+                  'tags': 'zinnia, test',
+                  'publication_date': datetime(2010, 1, 1, 12),
+                  'slug': 'my-entry'}
+        for i in range(5):
+            entry = Entry.objects.create(**params)
+            entry.status = PUBLISHED
+            entry.sites.add(self.site)
+            entry.save()
+        self.assertEqual(Entry.objects.count(), 6)
+
+        with self.assertNumQueries(0):
+            context = get_recent_entries(template='custom_template.html')
+        self.assertEqual(len(context['entries']), 5)
         self.assertEqual(context['template'], 'custom_template.html')
         with self.assertNumQueries(0):
             context = get_recent_entries(0)

@@ -40,6 +40,9 @@ from ..models.category import Category
 from ..models.entry import Entry
 from ..settings import ENTRY_LOOP_TEMPLATES
 from ..settings import PROTOCOL
+from ..settings import (NUMBER_RECENT_ENTRIES, NUMBER_FEATURED_ENTRIES,
+    NUMBER_DRAFT_ENTRIES, NUMBER_RANDOM_ENTRIES, NUMBER_POPULAR_ENTRIES,
+    NUMBER_SIMILAR_ENTRIES)
 from ..templates import loop_template_list
 
 
@@ -87,16 +90,17 @@ def get_authors(context, template='zinnia/tags/authors.html'):
 
 
 @register.inclusion_tag('zinnia/tags/dummy.html')
-def get_recent_entries(number=5, template='zinnia/tags/entries_recent.html'):
+def get_recent_entries(number=NUMBER_RECENT_ENTRIES, template='zinnia/tags/entries_recent.html'):
     """
     Return the most recent entries.
     """
+    print(NUMBER_RECENT_ENTRIES)
     return {'template': template,
             'entries': Entry.published.all()[:number]}
 
 
 @register.inclusion_tag('zinnia/tags/dummy.html')
-def get_featured_entries(number=5,
+def get_featured_entries(number=NUMBER_FEATURED_ENTRIES,
                          template='zinnia/tags/entries_featured.html'):
     """
     Return the featured entries.
@@ -106,7 +110,7 @@ def get_featured_entries(number=5,
 
 
 @register.inclusion_tag('zinnia/tags/dummy.html')
-def get_draft_entries(number=5,
+def get_draft_entries(number=NUMBER_DRAFT_ENTRIES,
                       template='zinnia/tags/entries_draft.html'):
     """
     Return the last draft entries.
@@ -116,7 +120,7 @@ def get_draft_entries(number=5,
 
 
 @register.inclusion_tag('zinnia/tags/dummy.html')
-def get_random_entries(number=5, template='zinnia/tags/entries_random.html'):
+def get_random_entries(number=NUMBER_RANDOM_ENTRIES, template='zinnia/tags/entries_random.html'):
     """
     Return random entries.
     """
@@ -125,7 +129,7 @@ def get_random_entries(number=5, template='zinnia/tags/entries_random.html'):
 
 
 @register.inclusion_tag('zinnia/tags/dummy.html')
-def get_popular_entries(number=5, template='zinnia/tags/entries_popular.html'):
+def get_popular_entries(number=NUMBER_POPULAR_ENTRIES, template='zinnia/tags/entries_popular.html'):
     """
     Return popular entries.
     """
@@ -136,7 +140,7 @@ def get_popular_entries(number=5, template='zinnia/tags/entries_popular.html'):
 
 
 @register.inclusion_tag('zinnia/tags/dummy.html', takes_context=True)
-def get_similar_entries(context, number=5,
+def get_similar_entries(context, number=NUMBER_SIMILAR_ENTRIES,
                         template='zinnia/tags/entries_similar.html'):
     """
     Return similar entries.
